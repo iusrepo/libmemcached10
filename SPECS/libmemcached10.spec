@@ -14,8 +14,7 @@ URL:       http://libmemcached.org/
 Source:    http://launchpad.net/libmemcached/1.0/%{version}/+download/%{real_name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# SASL support is currently disabled
-#BuildRequires: cyrus-sasl-devel
+BuildRequires: cyrus-sasl-devel
 
 BuildRequires: flex bison
 Conflicts: %{real_name} < %{base_ver}
@@ -94,8 +93,7 @@ export CC=/usr/bin/gcc44
 export CXX=/usr/bin/g++44
 %endif
 # option --with-memcached=false to disable server binary check (as we don't run test)
-# booi - disable sasl for now.
-%configure --disable-static --disable-sasl \
+%configure --disable-static \
 #%if ! %{with_tests}
 #   --with-memcached=false
 #%endif
@@ -158,6 +156,7 @@ rm -rf %{buildroot}
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
 - removed unpackaged files from %files
+- enabling SASL
 
 * Tue Nov 13 2012 Ben Harper <ben.harper@rackspace.com> - 1.0.13-2.ius
 - ported from changes made by booi from Remi's build see
