@@ -6,12 +6,12 @@
 
 Name:      %{name}
 Summary:   Client library and command line tools for memcached server
-Version:   1.0.13
-Release:   2.ius%{?dist}
+Version:   1.0.16
+Release:   1.ius%{?dist}
 License:   BSD
 Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
-Source:    http://launchpad.net/libmemcached/1.0/1.0.13/+download/%{real_name}-%{version}.tar.gz
+Source:    http://launchpad.net/libmemcached/1.0/%{version}/+download/%{real_name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # SASL support is currently disabled
@@ -136,7 +136,6 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/lib*.la
 %{_libdir}/libhashkit.so.2*
 %{_libdir}/libmemcached.so.11*
-%{_libdir}/libmemcachedprotocol.so.0*
 %{_libdir}/libmemcachedutil.so.2*
 
 
@@ -147,19 +146,21 @@ rm -rf %{buildroot}
 %{_includedir}/libmemcached-1.0
 %{_includedir}/libhashkit
 %{_includedir}/libhashkit-1.0
-%{_includedir}/libmemcachedprotocol-0.0
 %{_includedir}/libmemcachedutil-1.0
 %{_libdir}/libhashkit.so
 %{_libdir}/libmemcached.so
-%{_libdir}/libmemcachedprotocol.so
 %{_libdir}/libmemcachedutil.so
 %{_libdir}/pkgconfig/libmemcached.pc
 %{_datadir}/aclocal/ax_libmemcached.m4
 
 
 %changelog
+* Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
+- latest release, 1.0.16
+- removed unpackaged files from %files
+
 * Tue Nov 13 2012 Ben Harper <ben.harper@rackspace.com> - 1.0.13-2.ius
-- ported from changes made by booi from  Remi's build see
+- ported from changes made by booi from Remi's build see
   https://bugs.launchpad.net/ius/+bug/1052542/comments/11
 - added support for RHEL 5
 
