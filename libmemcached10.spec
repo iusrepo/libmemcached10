@@ -59,6 +59,8 @@ Summary: Header files and development libraries for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Requires: cyrus-sasl-devel%{?_isa}
+Conflicts: libmemcached-devel
+
 
 %description devel
 This package contains the header files and development libraries for
@@ -141,6 +143,7 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 - Add patch0 and patch1 from Fedora
 - Move CLI tools to utils subpackage
 - Ensure main package is parallel installable with stock equivalent
+- Ensure devel package conflicts with stock equivalent
 
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
