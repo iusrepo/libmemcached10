@@ -1,6 +1,3 @@
-%global real_name libmemcached
-%global base_ver 1.0
-
 Name:      libmemcached10
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
@@ -17,7 +14,6 @@ BuildRequires: gcc-c++
 BuildRequires: cyrus-sasl-devel
 BuildRequires: flex
 BuildRequires: bison
-Conflicts: %{real_name} < %{base_ver}
 BuildRequires: systemtap-sdt-devel
 BuildRequires: libevent-devel
 
@@ -59,19 +55,19 @@ memtouch    Touches a key
 
 
 %package devel
-Summary: Header files and development libraries for %{real_name}
+Summary: Header files and development libraries for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Requires: cyrus-sasl-devel%{?_isa}
 
 %description devel
-This package contains the header files and development libraries
-for %{real_name}. If you like to develop programs using %{real_name}, 
-you will need to install %{real_name}-devel.
+This package contains the header files and development libraries for
+libmemcached. If you like to develop programs using libmemcached, you will need
+to install %{name}-devel.
 
 
 %prep
-%setup -q -n %{real_name}-%{version}
+%setup -q -n libmemcached-%{version}
 %patch0 -p1 -b .link
 %patch1 -p1 -b .build
 
@@ -144,6 +140,7 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 - Latest upstream
 - Add patch0 and patch1 from Fedora
 - Move CLI tools to utils subpackage
+- Ensure main package is parallel installable with stock equivalent
 
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
