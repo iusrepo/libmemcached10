@@ -32,7 +32,15 @@ libmemcached is a C/C++ client library and tools for the memcached server
 (http://memcached.org/). It has been designed to be light on memory
 usage, and provide full access to server side methods.
 
-It also implements several command line tools:
+
+%package utils
+Summary: Command line tools for libmemcached
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Conflicts: libmemcached
+
+
+%description utils
+This package contains the command line tools for libmemcached.
 
 memaslap    Load testing and benchmarking a server
 memcapable  Checking a Memcached server capibilities and compatibility
@@ -99,13 +107,16 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 
 %files
 %doc AUTHORS COPYING README THANKS TODO ChangeLog
-%{_bindir}/mem*
-%{_mandir}/man1/mem*
 %exclude %{_libdir}/lib*.la
 %{_libdir}/libhashkit.so.2*
 %{_libdir}/libmemcached.so.11*
 %{_libdir}/libmemcachedprotocol.so.0*
 %{_libdir}/libmemcachedutil.so.2*
+
+
+%files utils
+%{_bindir}/mem*
+%{_mandir}/man1/mem*
 
 
 %files devel
@@ -132,6 +143,7 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 * Tue Jul 02 2019 Carl George <carl@george.computer> - 1.0.18-1
 - Latest upstream
 - Add patch0 and patch1 from Fedora
+- Move CLI tools to utils subpackage
 
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
