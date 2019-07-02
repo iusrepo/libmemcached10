@@ -1,14 +1,16 @@
 %global real_name libmemcached
-%global name libmemcached10
 %global base_ver 1.0
 
-Name:      %{name}
+Name:      libmemcached10
 Summary:   Client library and command line tools for memcached server
-Version:   1.0.16
-Release:   1.ius%{?dist}
+Version:   1.0.18
+Release:   1%{?dist}
 License:   BSD
 URL:       http://libmemcached.org/
-Source:    http://launchpad.net/libmemcached/1.0/%{version}/+download/%{real_name}-%{version}.tar.gz
+# Original sources:
+#   http://launchpad.net/libmemcached/1.0/%%{version}/+download/libmemcached-%%{version}.tar.gz
+# Fedora sources:
+Source0:   https://src.fedoraproject.org/lookaside/pkgs/libmemcached/libmemcached-%{version}-exhsieh.tar.gz/b4cd7ccfa1bca8b2563300342b9fd01f/libmemcached-%{version}-exhsieh.tar.gz
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -27,6 +29,7 @@ usage, and provide full access to server side methods.
 
 It also implements several command line tools:
 
+memaslap    Load testing and benchmarking a server
 memcapable  Checking a Memcached server capibilities and compatibility
 memcat      Copy the value of a key to standard output
 memcp       Copy data to a server
@@ -65,9 +68,16 @@ cp -p tests/*.{cc,h} examples/
 # option --with-memcached=false to disable server binary check (as we don't run test)
 %configure \
    --with-memcached=false \
+   --enable-sasl \
+   --enable-libmemcachedprotocol \
+   --enable-memaslap \
+   --enable-dtrace \
    --disable-static
 
-make %{_smp_mflags}
+# for warning: unknown option after '#pragma GCC diagnostic' kind
+sed -e 's/-Werror//' -i Makefile
+
+make %{_smp_mflags} V=1
 
 
 %install
@@ -83,9 +93,11 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 %files
 %doc AUTHORS COPYING README THANKS TODO ChangeLog
 %{_bindir}/mem*
+%{_mandir}/man1/mem*
 %exclude %{_libdir}/lib*.la
 %{_libdir}/libhashkit.so.2*
 %{_libdir}/libmemcached.so.11*
+%{_libdir}/libmemcachedprotocol.so.0*
 %{_libdir}/libmemcachedutil.so.2*
 
 
@@ -95,15 +107,24 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 %{_includedir}/libmemcached-1.0
 %{_includedir}/libhashkit
 %{_includedir}/libhashkit-1.0
+%{_includedir}/libmemcachedprotocol-0.0
 %{_includedir}/libmemcachedutil-1.0
 %{_libdir}/libhashkit.so
 %{_libdir}/libmemcached.so
+%{_libdir}/libmemcachedprotocol.so
 %{_libdir}/libmemcachedutil.so
 %{_libdir}/pkgconfig/libmemcached.pc
 %{_datadir}/aclocal/ax_libmemcached.m4
+%{_mandir}/man3/libmemcached*
+%{_mandir}/man3/libhashkit*
+%{_mandir}/man3/memcached*
+%{_mandir}/man3/hashkit*
 
 
 %changelog
+* Tue Jul 02 2019 Carl George <carl@george.computer> - 1.0.18-1
+- Latest upstream
+
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
 - removed unpackaged files from %files
