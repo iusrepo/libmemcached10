@@ -21,6 +21,11 @@ Conflicts: %{real_name} < %{base_ver}
 BuildRequires: systemtap-sdt-devel
 BuildRequires: libevent-devel
 
+Patch0: libmemcached-fix-linking-with-libpthread.patch
+# Fix: ISO C++ forbids comparison between pointer and integer [-fpermissive]
+# https://bugs.launchpad.net/libmemcached/+bug/1663985
+Patch1: libmemcached-build.patch
+
 
 %description
 libmemcached is a C/C++ client library and tools for the memcached server
@@ -59,6 +64,8 @@ you will need to install %{real_name}-devel.
 
 %prep
 %setup -q -n %{real_name}-%{version}
+%patch0 -p1 -b .link
+%patch1 -p1 -b .build
 
 mkdir examples
 cp -p tests/*.{cc,h} examples/
@@ -124,6 +131,7 @@ make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 %changelog
 * Tue Jul 02 2019 Carl George <carl@george.computer> - 1.0.18-1
 - Latest upstream
+- Add patch0 and patch1 from Fedora
 
 * Thu Aug 29 2013 Ben Harper <ben.harper@rackspace.com> - 1.0.16-1.ius
 - latest release, 1.0.16
