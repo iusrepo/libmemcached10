@@ -9,32 +9,20 @@ Summary:   Client library and command line tools for memcached server
 Version:   1.0.16
 Release:   1.ius%{?dist}
 License:   BSD
-Group:     System Environment/Libraries
 URL:       http://libmemcached.org/
 Source:    http://launchpad.net/libmemcached/1.0/%{version}/+download/%{real_name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires: gcc
+BuildRequires: gcc-c++
 BuildRequires: cyrus-sasl-devel
-
-BuildRequires: flex bison
+BuildRequires: flex
+BuildRequires: bison
 Conflicts: %{real_name} < %{base_ver}
 %if %{with_tests}
 BuildRequires: memcached
 %endif
-
-#RHEL 5 needs a newer verison than stock gcc and gcc-c++
-%if 0%{?rhel} < 6
-BuildRequires: gcc44 gcc44-c++
-%else
-BuildRequires: gcc gcc-c++
-%endif
-
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: systemtap-sdt-devel
-%endif
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 5
 BuildRequires: libevent-devel
-%endif
 
 
 %description
@@ -61,7 +49,6 @@ memtouch    Touches a key
 
 %package devel
 Summary: Header files and development libraries for %{real_name}
-Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 Requires: cyrus-sasl-devel%{?_isa}
@@ -78,20 +65,8 @@ you will need to install %{real_name}-devel.
 mkdir examples
 cp -p tests/*.{cc,h} examples/
 
-# Will be regenerated during build
-%if 0%{?fedora} > 9 || 0%{?rhel} > 5
-rm -f libmemcached/csl/{parser,scanner}.cc
-%endif
-
-# Temporary fix for SASL detection
-#sed -i -e s/ax_cv_sasl/ac_enable_sasl/ configure
-
 
 %build
-%if 0%{?rhel} < 6
-export CC=/usr/bin/gcc44
-export CXX=/usr/bin/g++44
-%endif
 # option --with-memcached=false to disable server binary check (as we don't run test)
 %configure --disable-static \
 #%if ! %{with_tests}
@@ -102,7 +77,6 @@ make %{_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
 
 
@@ -117,18 +91,13 @@ echo 'Test suite disabled (missing "--with tests" option)'
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %post -p /sbin/ldconfig
 
 
 %postun -p /sbin/ldconfig
- 
+
 
 %files
-%defattr (-,root,root,-) 
 %doc AUTHORS COPYING README THANKS TODO ChangeLog
 %{_bindir}/mem*
 %exclude %{_libdir}/lib*.la
@@ -138,7 +107,6 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr (-,root,root,-) 
 %doc examples
 %{_includedir}/libmemcached
 %{_includedir}/libmemcached-1.0
