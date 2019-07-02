@@ -1,5 +1,3 @@
-%global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
-
 %global real_name libmemcached
 %global name libmemcached10
 %global base_ver 1.0
@@ -18,9 +16,6 @@ BuildRequires: cyrus-sasl-devel
 BuildRequires: flex
 BuildRequires: bison
 Conflicts: %{real_name} < %{base_ver}
-%if %{with_tests}
-BuildRequires: memcached
-%endif
 BuildRequires: systemtap-sdt-devel
 BuildRequires: libevent-devel
 
@@ -68,27 +63,15 @@ cp -p tests/*.{cc,h} examples/
 
 %build
 # option --with-memcached=false to disable server binary check (as we don't run test)
-%configure --disable-static \
-#%if ! %{with_tests}
-#   --with-memcached=false
-#%endif
+%configure \
+   --with-memcached=false \
+   --disable-static
 
 make %{_smp_mflags}
 
 
 %install
 make install  DESTDIR="%{buildroot}" AM_INSTALL_PROGRAM_FLAGS=""
-
-
-%check
-%if %{with_tests}
-# test suite cannot run in mock (same port use for memcache servers on all arch)
-# All tests completed successfully
-# diff output.res output.cmp fails but result depend on server version
-make test
-%else
-echo 'Test suite disabled (missing "--with tests" option)'
-%endif
 
 
 %post -p /sbin/ldconfig
